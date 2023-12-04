@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Form
 
-# Register your models here.
+# Registrar el modelo Form en el sitio de administración
+admin.site.register(Form)
