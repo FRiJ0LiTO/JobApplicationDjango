@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from .forms import ApplicationForm
+from .models import Form
+from django.contrib import messages
+from django.core.mail import EmailMessage
 
 
 def index(request):
@@ -11,5 +14,16 @@ def index(request):
             email = form.cleaned_data["email"]
             date = form.cleaned_data["date"]
             occupation = form.cleaned_data["occupation"]
-            print(first_name)
+
+            # Almacenar la entrada de usuario en la base de datos
+            Form.objects.create(first_name=first_name, last_name=last_name,
+                                email=email, date=date, occupation=occupation)
+
+            message_body = f"A new job application was submitted. Thank you, \n{first_name}."
+            email_message = EmailMessage("Form submission confirmation",
+                                         message_body, to=[email])
+            email_message.send()
+
+            # Mensaje de éxito al registrar los datos del usuario
+            messages.success(request, "Form submitted successfully")
     return render(request, "index.html")
